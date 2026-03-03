@@ -7,6 +7,11 @@ module.exports = {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			manrope: ['Manrope', 'sans-serif'],
+  			inter: ['Inter', 'sans-serif'],
+  			mono: ['JetBrains Mono', 'monospace']
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
