@@ -172,8 +172,8 @@ async def seed_data():
     
     await db.parkingSites.insert_many(sites)
     
-    for i in range(min(10, len(sites))):
-        site = sites[i]
+    # Seed slots for ALL parking locations
+    for site in sites:
         rows = ["A", "B", "C", "D", "E", "F"]
         slots_per_row = (site["totalSlots"] + len(rows) - 1) // len(rows)
         
@@ -197,7 +197,7 @@ async def seed_data():
         if slots:
             await db.parkingSlots.insert_many(slots)
     
-    return {"message": "Successfully seeded data", "sites": len(sites)}
+    return {"message": "Successfully seeded data", "sites": len(sites), "slotsSeeded": "all locations"}
 
 @api_router.post("/simulate-esp32")
 async def simulate_esp32():
