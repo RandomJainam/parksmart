@@ -34,6 +34,12 @@ body {
 .custom-marker {
   background: transparent;
   border: none;
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+.custom-marker > div {
+  pointer-events: none;
 }
 
 .leaflet-popup-content-wrapper {

@@ -35,6 +35,8 @@ function createCustomMarker(availableSlots, totalSlots) {
         border: 3px solid white;
         box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         transform: translate(-50%, -50%);
+        pointer-events: auto;
+        cursor: pointer;
       ">
         ${availableSlots}
       </div>

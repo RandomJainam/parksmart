@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Navigation, MapPin, Clock, Car, X, ChevronUp } from 'lucide-react';
 
 const BottomSheet = ({ parking, onClose, onBookSpot, onNavigate }) => {
-  const [snapPoint, setSnapPoint] = useState('peek');
+  const [snapPoint, setSnapPoint] = useState('half');
 
   if (!parking) return null;
 
