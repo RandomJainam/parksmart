@@ -1,0 +1,154 @@
+{
+  "identity": {
+    "name": "E1",
+    "role": "Anti-AI Creative Designer",
+    "mission": "Create a 'Hard', Advanced, Modern Smart Parking App for Mumbai that feels like a high-end mobility tool (Uber/Google Maps quality).",
+    "principles": [
+      "The Map is the Canvas - UI floats above it.",
+      "Motion is Meaning - Transitions explain spatial relationships.",
+      "Density with Clarity - Show 100 slots without clutter.",
+      "Context-Aware - Bottom sheets adapt to what the user selects."
+    ]
+  },
+  "theme": {
+    "mode": "light",
+    "archetype": "Swiss & High-Contrast (Smart City Variant)",
+    "vibe": "Efficient, Fluid, Trustworthy, Precision",
+    "css_variables": {
+      "--radius": "1rem"
+    }
+  },
+  "typography": {
+    "headings": {
+      "family": "Manrope, sans-serif",
+      "weights": ["600", "700", "800"],
+      "tracking": "-0.02em",
+      "usage": "Use for all titles, prices, and major data points."
+    },
+    "body": {
+      "family": "Inter, sans-serif",
+      "weights": ["400", "500"],
+      "usage": "Use for descriptions, addresses, and lists."
+    },
+    "mono": {
+      "family": "JetBrains Mono, monospace",
+      "usage": "Use for slot numbers (e.g., A-102) and license plates."
+    }
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "DEFAULT": "#4F46E5",
+        "foreground": "#FFFFFF",
+        "description": "Indigo 600 - Digital, Modern, Trustworthy. Use for Primary CTAs and Active States."
+      },
+      "secondary": {
+        "DEFAULT": "#10B981",
+        "foreground": "#FFFFFF",
+        "description": "Emerald 500 - Critical for 'AVAILABLE' slots and Success states."
+      },
+      "destructive": {
+        "DEFAULT": "#EF4444",
+        "foreground": "#FFFFFF",
+        "description": "Red 500 - Critical for 'OCCUPIED' slots and Errors."
+      },
+      "accent": {
+        "DEFAULT": "#F8FAFC",
+        "foreground": "#0F172A",
+        "description": "Slate 50 - Backgrounds for cards to ensure legibility."
+      },
+      "muted": {
+        "DEFAULT": "#64748B",
+        "description": "Slate 500 - For secondary text and icons."
+      },
+      "map_elements": {
+        "water": "#C6E6F5",
+        "land": "#F4F6F8",
+        "roads": "#FFFFFF"
+      }
+    },
+    "status_colors": {
+      "available": "#10B981",
+      "occupied": "#EF4444",
+      "selected": "#4F46E5",
+      "reserved": "#94A3B8"
+    }
+  },
+  "layout_strategy": {
+    "mobile_first": true,
+    "structure": "Full-screen Map (z-0) + Floating HUD (z-10) + Bottom Sheet (z-20)",
+    "spacing": {
+      "container_padding": "p-4 md:p-6",
+      "card_padding": "p-5"
+    },
+    "z_indices": {
+      "map": 0,
+      "floating_search": 10,
+      "bottom_sheet": 20,
+      "modals": 50
+    }
+  },
+  "components": {
+    "map": {
+      "library": "Leaflet",
+      "tile_layer": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+      "attribution": "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions'>CARTO</a>",
+      "marker_style": "Custom divIcon with pricing bubble or simple dot. Active marker scales up."
+    },
+    "bottom_sheet": {
+      "type": "Custom Framer Motion Implementation",
+      "behavior": "Snap points: [15% (Peeking), 45% (Half), 90% (Full)].",
+      "visuals": "Rounded-t-3xl, bg-white, heavy shadow (shadow-[0_-8px_30px_rgba(0,0,0,0.12)]), drag handle pill at top."
+    },
+    "slot_picker": {
+      "style": "Movie Theatre Grid",
+      "visuals": "Grid gap-2 or gap-3. Slots are rounded squares or pills. 'Screen' area represents Entrance.",
+      "interaction": "Tap to select. Multi-select allowed if booking multiple? (Assume single for now).",
+      "legend": "Must include sticky legend at top: Available, Occupied, Selected."
+    },
+    "cards": {
+      "style": "Floating, Glass-like or Solid White",
+      "shadow": "shadow-lg",
+      "border": "border border-slate-100"
+    }
+  },
+  "motion": {
+    "transitions": "Spring physics (stiffness: 300, damping: 30) for sheet movements.",
+    "micro_interactions": "Scale button on press (0.95). Slot scales up on selection.",
+    "page_transitions": "Slide over (Uber style) or Fade."
+  },
+  "visual_assets": {
+    "images": [
+      {
+        "category": "Parking Lot Cover",
+        "url": "https://images.unsplash.com/photo-1771931108189-aa2cfc5ff6c5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzV8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB1bmRlcmdyb3VuZCUyMHBhcmtpbmclMjBsb3QlMjBicmlnaHQlMjBsaWdodGluZ3xlbnwwfHx8fDE3NzI1NzU4Mjl8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Modern underground parking with lighting"
+      },
+      {
+        "category": "EV Charging",
+        "url": "https://images.unsplash.com/photo-1763543029709-bb81b7dfc9ad?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTN8MHwxfHNlYXJjaHw0fHxlbGVjdHJpYyUyMHZlaGljbGUlMjBjaGFyZ2luZyUyMHN0YXRpb24lMjBtb2Rlcm4lMjBtaW5pbWFsfGVufDB8fHx8MTc3MjU3NTgzMHww&ixlib=rb-4.1.0&q=85",
+        "description": "Electric vehicle charger"
+      }
+    ],
+    "icons": {
+      "library": "lucide-react",
+      "required": ["MapPin", "Car", "Navigation", "CreditCard", "User", "Clock", "Filter", "Search", "Menu", "X", "ChevronUp"]
+    }
+  },
+  "universal_guidelines": [
+    "Do NOT use generic 'Inter' for Headings. Use 'Manrope'.",
+    "Do NOT make the map secondary. It is the background of the entire app.",
+    "Ensure 'Available' slots are GREEN and 'Occupied' are RED. This is a universal mental model.",
+    "Use 'Indian Rupee (₹)' for all currency.",
+    "Mock the ESP32 data with a realistic interval (e.g., updates every 5 seconds).",
+    "Focus map on Mumbai coordinates: 19.0760, 72.8777.",
+    "Use Sonner for toasts."
+  ],
+  "instructions_to_main_agent": [
+    "1. Setup Leaflet map with CartoDB Voyager tiles (cleanest for light mode).",
+    "2. Build the 'SlotBooking' component as a CSS Grid. It should look like a movie theatre seat picker.",
+    "3. Implement the Bottom Sheet using Framer Motion. It should be persistent (always there) and expandable.",
+    "4. Mock Firestore/ESP32 data structure: Collection 'parking_lots' -> Document -> Subcollection 'slots'.",
+    "5. Ensure the design is Mobile-First. Test heavily on narrow viewports."
+  ]
+}
