@@ -1,38 +1,48 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { getDatabase, ref, onValue } from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB2mGC1FYDHxdKH02o-2r_kSU1X07omeoE",
-  authDomain: "spark-12f5f.firebaseapp.com",
-  projectId: "spark-12f5f",
-  storageBucket: "spark-12f5f.firebasestorage.app",
-  messagingSenderId: "647068680623",
-  appId: "1:647068680623:web:4b1db25b2db2c604322f5a"
+  apiKey: "AIzaSyB_OtU4E0giWeR-BND3QjbaBD8HJVVeYrY",
+  databaseURL: "https://spark-6a409-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "spark-6a409"
 };
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+export const realtimeDb = getDatabase(app);
 
-export const initAuth = () => {
-  return new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log('User authenticated:', user.uid);
-        resolve(user);
-      } else {
-        signInAnonymously(auth)
-          .then((userCredential) => {
-            console.log('Anonymous sign-in successful:', userCredential.user.uid);
-            resolve(userCredential.user);
-          })
-          .catch((error) => {
-            console.error('Anonymous sign-in error:', error);
-            resolve(null);
-          });
-      }
-      unsubscribe();
-    });
+// Listen to ESP32 sensor data for slot A1
+export const listenToESP32SlotA1 = (callback) => {
+  const slot1Ref = ref(realtimeDb, 'parking/slot1');
+  
+  return onValue(slot1Ref, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      const isOccupied = data.status === "OCCUPIED" || data.status === "occupied";
+      callback({
+        distance: data.distance,
+        status: data.status,
+        isOccupied: isOccupied,
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+};
+
+// Listen to parking slots (alternative structure)
+export const listenToParkingSlots = (callback) => {
+  const slotsRef = ref(realtimeDb, 'parking_slots/Slot_001');
+  
+  return onValue(slotsRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      callback({
+        isOccupied: data.is_occupied,
+        isOffline: data.is_offline,
+        isReserved: data.is_reserved,
+        reservedBy: data.reserved_by,
+        reservedUntil: data.reserved_until,
+        timestamp: new Date().toISOString()
+      });
+    }
   });
 };

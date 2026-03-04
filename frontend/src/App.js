@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { MapPin, Clock, User, Menu, X } from 'lucide-react';
-import { Toaster } from './components/ui/sonner';
+import { MapPin, Clock, User, Menu, X, Radio } from 'lucide-react';
+import { Toaster, toast } from './components/ui/sonner';
 import ParkingMap from './components/ParkingMap';
 import BottomSheet from './components/BottomSheet';
 import SlotPicker from './components/SlotPicker';
@@ -10,6 +10,7 @@ import HistoryPage from './pages/HistoryPage';
 import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import { api } from './lib/api';
+import { listenToESP32SlotA1 } from './lib/firebase';
 import './App.css';
 
 function FloatingNav({ onMenuClick }) {

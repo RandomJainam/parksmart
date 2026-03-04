@@ -31,6 +31,15 @@ export const api = {
   async simulateESP32() {
     const response = await axios.post(`${API_URL}/simulate-esp32`);
     return response.data;
+  },
+
+  async updateESP32SlotA1(isOccupied, status, distance) {
+    const response = await axios.post(`${API_URL}/esp32-update-a1`, {
+      isOccupied,
+      status,
+      distance
+    });
+    return response.data;
   }
 };
 

@@ -227,6 +227,48 @@ async def simulate_esp32():
     
     return {"message": "ESP32 simulation completed", "slot": random_slot["slotId"], "occupied": new_occupied}
 
+class ESP32Update(BaseModel):
+    isOccupied: bool
+    distance: Optional[float] = None
+    status: Optional[str] = None
+
+@api_router.post("/esp32-update-a1")
+async def esp32_update_slot_a1(update: ESP32Update):
+    """Update slot A1 for all parking locations based on ESP32 sensor data"""
+    result = await db.parkingSlots.update_many(
+        {"slotId": "A1"},
+        {"$set": {
+            "occupied": update.isOccupied,
+            "updatedAt": datetime.now(timezone.utc).isoformat(),
+            "esp32Controlled": True
+        }}
+    )
+    
+    # Update available slot counts for all affected parking sites
+    all_sites = await db.parkingSites.find({}).to_list(1000)
+    for site in all_sites:
+        slot_a1 = await db.parkingSlots.find_one({"parkingId": site["id"], "slotId": "A1"})
+        if slot_a1:
+            occupied_count = await db.parkingSlots.count_documents({
+                "parkingId": site["id"],
+                "occupied": True
+            })
+            available = site["totalSlots"] - occupied_count
+            await db.parkingSites.update_one(
+                {"id": site["id"]},
+                {"$set": {
+                    "availableSlots": available,
+                    "bookedSlots": occupied_count
+                }}
+            )
+    
+    return {
+        "message": "ESP32 update applied to all A1 slots",
+        "updated": result.modified_count,
+        "isOccupied": update.isOccupied,
+        "status": update.status
+    }
+
 app.include_router(api_router)
 
 app.add_middleware(
