@@ -3,6 +3,32 @@ import axios from 'axios';
 const API_URL = process.env.REACT_APP_BACKEND_URL + '/api';
 
 export const api = {
+  // Auth endpoints
+  async register(userData) {
+    const response = await axios.post(`${API_URL}/auth/register`, userData);
+    return response.data;
+  },
+
+  async login(email, password) {
+    const response = await axios.post(`${API_URL}/auth/login`, { email, password });
+    return response.data;
+  },
+
+  async getMe(token) {
+    const response = await axios.get(`${API_URL}/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  },
+
+  async updateProfile(token, userData) {
+    const response = await axios.put(`${API_URL}/auth/profile`, userData, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  },
+
+  // Parking endpoints
   async getParkingSites() {
     const response = await axios.get(`${API_URL}/parking-sites`);
     return response.data;
