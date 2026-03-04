@@ -167,6 +167,7 @@ function MapPageContent() {
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dataSeeded, setDataSeeded] = useState(false);
+  const [esp32Status, setEsp32Status] = useState({ connected: false, lastUpdate: null });
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -174,6 +175,7 @@ function App() {
         await api.seedData();
         setDataSeeded(true);
         
+        // Simulate other slots (not A1)
         setInterval(async () => {
           try {
             await api.simulateESP32();
@@ -187,12 +189,50 @@ function App() {
     };
 
     initializeApp();
+
+    // Listen to real ESP32 sensor data for slot A1
+    const unsubscribe = listenToESP32SlotA1(async (data) => {
+      console.log('ESP32 Update:', data);
+      try {
+        await api.updateESP32SlotA1(data.isOccupied, data.status, data.distance);
+        setEsp32Status({
+          connected: true,
+          lastUpdate: new Date().toLocaleTimeString(),
+          status: data.status,
+          distance: data.distance
+        });
+        
+        toast.info('ESP32 Sensor Update', {
+          description: `Slot A1: ${data.status} (${data.distance?.toFixed(1)}cm)`,
+          duration: 3000,
+        });
+      } catch (error) {
+        console.error('Failed to update ESP32 slot:', error);
+        setEsp32Status({ connected: false, lastUpdate: null });
+      }
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   return (
     <Router>
       <div className="app-container">
         <FloatingNav onMenuClick={() => setMenuOpen(true)} />
+        
+        {/* ESP32 Status Indicator */}
+        {esp32Status.connected && (
+          <div className="fixed top-20 left-4 z-10 bg-emerald-500 text-white px-3 py-2 rounded-lg shadow-lg flex items-center gap-2 text-sm font-semibold">
+            <Radio size={16} className="animate-pulse" />
+            <div>
+              <div>ESP32 Live</div>
+              <div className="text-xs opacity-90">{esp32Status.lastUpdate}</div>
+            </div>
+          </div>
+        )}
+        
         <SideMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
         
         <Routes>
